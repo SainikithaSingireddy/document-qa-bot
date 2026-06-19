@@ -1,92 +1,232 @@
 # RAG Document Q&A Bot
 
 ## Project Overview
-This project is a Retrieval-Augmented Generation (RAG) based Document Q&A system.
-It allows users to ask natural language questions over multiple documents and get answers based on retrieved context from a vector database.
 
-The system extracts text from PDF documents, splits them into chunks, generates embeddings, stores them in ChromaDB, and retrieves relevant context to answer user queries.
+This project is a Retrieval-Augmented Generation (RAG) based Document Question Answering system.
+
+The application allows users to ask natural language questions about documents stored in a knowledge base and receive answers grounded in the document content.
+
+Instead of relying only on the language model's general knowledge, the system retrieves the most relevant document chunks from a vector database and uses them as context for answer generation. This helps reduce hallucinations and improves answer accuracy.
+
+---
+
+## Features
+
+- PDF document ingestion
+- Text extraction and cleaning
+- Text chunking with overlap
+- Vector embeddings using Gemini Embeddings
+- ChromaDB vector database storage
+- Semantic similarity search
+- Retrieval-Augmented Generation (RAG)
+- Source-aware answers
+- Streamlit web interface
+- Public deployment support
 
 ---
 
 ## Tech Stack
+
 - Python 3.11+
-- ChromaDB (Vector Database)
-- pdfplumber (PDF extraction)
-- Google Gemini Embeddings API (or equivalent embedding model)
-- Regex (text cleaning)
+- ChromaDB
+- Google Gemini API (`google-genai`)
+- pdfplumber
+- pypdf
+- python-dotenv
+- Streamlit
 
 ---
 
-##  Architecture
+## Architecture
 
-1. **Document Ingestion**
-   - Load PDFs from `/data`
-   - Extract text using pdfplumber
+### 1. Document Ingestion
 
-2. **Text Chunking**
-   - Split text into overlapping chunks (1000 chars, overlap 200)
+- Load PDF documents from the `data/` folder
+- Extract text using pdfplumber
+- Clean extracted text
 
-3. **Embedding Generation**
-   - Convert each chunk into vector embeddings
+### 2. Text Chunking
 
-4. **Vector Storage**
-   - Store embeddings in ChromaDB with metadata (source filename)
+- Split documents into chunks
+- Chunk Size: 1000 characters
+- Overlap: 200 characters
 
-5. **Retrieval**
-   - Convert user query into embedding
-   - Perform similarity search in ChromaDB
+### 3. Embedding Generation
 
-6. **Answer Generation**
-   - Combine retrieved chunks
-   - Generate grounded response based on context
+- Generate vector embeddings using Gemini Embedding Model
+
+### 4. Vector Storage
+
+- Store embeddings and metadata in ChromaDB
+
+### 5. Retrieval
+
+- Convert user question into an embedding
+- Retrieve top matching chunks using semantic similarity search
+
+### 6. Answer Generation
+
+- Send retrieved context and question to Gemini
+- Generate grounded answers using retrieved information
 
 ---
 
 ## Project Structure
 
+```text
 document-qa-bot/
 │
-├── data/ # PDF documents
-├── src/
-│ ├── ingest.py # Document ingestion pipeline
-│ ├── query.py # Q&A chatbot (CLI)
-│ ├── embeddings.py # Embedding generation
-│ ├── vector_store.py # ChromaDB setup
-│
-├── requirements.txt
+├── .env
+├── .gitignore
 ├── README.md
+├── requirements.txt
+├── app.py
+│
+├── data/
+│   ├── ai.pdf
+│   ├── cybersecurity.pdf
+│   └── space.pdf
+│
+├── db/
+│
+└── src/
+    ├── embeddings.py
+    ├── ingest.py
+    ├── main.py
+    ├── query.py
+    └── vector_store.py
+```
 
-### ⚙️ Setup Instructions
+---
+
+## Installation
+
 ### 1. Clone Repository
-git clone <repo-url>
+
+```bash
+git clone https://github.com/SainikithaSingireddy/document-qa-bot.git
 cd document-qa-bot
+```
 
 ### 2. Create Virtual Environment
+
+```bash
 python -m venv venv
+```
+
+### 3. Activate Virtual Environment
+
+Windows:
+
+```bash
 venv\Scripts\activate
+```
 
-### 3. Install Dependencies
+### 4. Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-### 4. Add API Key
+### 5. Create Environment File
+
 Create a `.env` file:
-GOOGLE_API_KEY=your_api_key_here
 
-### 5. Run Ingestion
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+### 6. Ingest Documents
+
+```bash
 python src/ingest.py
+```
 
-### 6. Run Query Bot
-python src/query.py
+### 7. Run Application
 
-### 🧪 Example Queries
+CLI Version:
+
+```bash
+python src/main.py
+```
+
+Streamlit Version:
+
+```bash
+streamlit run app.py
+```
+
+---
+
+## RAG Workflow
+
+```text
+User Question
+      │
+      ▼
+Generate Query Embedding
+      │
+      ▼
+Search ChromaDB
+      │
+      ▼
+Retrieve Relevant Chunks
+      │
+      ▼
+Build Context Prompt
+      │
+      ▼
+Gemini LLM
+      │
+      ▼
+Grounded Answer
+```
+
+---
+
+## Example Questions
+
 - What is Artificial Intelligence?
-- Explain deep learning
-- What is cybersecurity?
-- How does RAG work?
-- What is space exploration?
+- What is Machine Learning?
+- What is Space Exploration?
+- Explain Deep Learning.
+- What information is available about Cyber Security?
 
-### ⚠️ Known Limitations
-- PDF text extraction may contain minor formatting issues
-- Works best with text-based PDFs (not scanned images)
-- Currently CLI-based (no UI)
-- Embedding model dependency required for setup
+---
+
+## Sample Output
+
+Question:
+
+```text
+What is Artificial Intelligence?
+```
+
+Answer:
+
+```text
+Artificial Intelligence is a computing concept that helps machines think and solve complex problems similarly to humans.
+
+Source:
+ai.pdf
+```
+
+---
+
+## Future Improvements
+
+- DOCX document support
+- Page-level citations
+- Improved chunking strategies
+- Multi-document ranking
+- Conversation memory
+- Support for additional embedding models
+- Support for local LLMs using Ollama
+
+---
+
+## Author
+
+**Sainikitha Singireddy**
+
+AI Engineering Internship Assignment – RAG Document Q&A Bot
