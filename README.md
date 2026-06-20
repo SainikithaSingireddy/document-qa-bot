@@ -33,10 +33,20 @@ This project implements a **RAG pipeline**:
 
 ---
 ## 📁 Project Structure
-hello
-world
-test
-case
+document-qa-bot/
+│
+├── app.py
+├── src/
+│ ├── query.py
+│ ├── ingest.py
+│ ├── embeddings.py
+│ ├── vector_store.py
+│
+├── data/
+├── db/
+├── requirements.txt
+├── .env
+└── README.md
 ---
 
 ##  How It Works
