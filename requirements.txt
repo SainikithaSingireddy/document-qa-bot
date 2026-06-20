@@ -1,6 +1,6 @@
-chromadb==0.4.24
-protobuf==4.25.3
 streamlit
+chromadb==0.4.24
 google-generativeai
 python-dotenv
 pypdf
+numpy==1.26.4
