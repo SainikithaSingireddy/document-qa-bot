@@ -32,8 +32,7 @@ This project implements a **RAG pipeline**:
 - dotenv (Environment variables)
 
 ---
-
-## Project Structure
+## 📁 Project Structure
 
 document-qa-bot/
 │
