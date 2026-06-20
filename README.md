@@ -36,19 +36,18 @@ This project implements a **RAG pipeline**:
 
 document-qa-bot/
 │
-├── app.py # Streamlit UI
+├── app.py                # Streamlit UI
 ├── src/
-│ ├── query.py # RAG pipeline (retrieve + generate)
-│ ├── ingest.py # Document ingestion pipeline
-│ ├── embeddings.py # Embedding generation
-│ ├── vector_store.py # ChromaDB setup
+│   ├── query.py          # RAG pipeline (retrieve + generate)
+│   ├── ingest.py         # Document ingestion pipeline
+│   ├── embeddings.py     # Embedding generation
+│   ├── vector_store.py   # ChromaDB setup
 │
-├── data/ # PDF documents
-├── db/ # Vector database storage
+├── data/                 # PDF documents
+├── db/                   # Vector database storage
 ├── requirements.txt
 ├── .env
 └── README.md
-
 
 ---
 
