@@ -1,8 +1,5 @@
-google-genai
+streamlit
+python-dotenv
 chromadb
 pypdf
-pdfplumber
-python-docx
-python-dotenv
-streamlit
-tqdm
+google-genai

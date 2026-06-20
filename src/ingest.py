@@ -1,74 +1,49 @@
-from pathlib import Path
+import os
 from pypdf import PdfReader
 from embeddings import get_embedding
 from vector_store import collection
-import pdfplumber
-import re
 
-DATA_FOLDER = Path("data")
-
-def clean_text(text):
-    return re.sub(r'\s+', ' ', text).strip()
+DATA_DIR = "data"
 
 
 def read_pdf(file_path):
+    reader = PdfReader(file_path)
     text = ""
-
-    with pdfplumber.open(file_path) as pdf:
-        for page in pdf.pages:
-            page_text = page.extract_text()
-
-            if page_text:
-                text += clean_text(page_text) + "\n"
-
+    for page in reader.pages:
+        if page.extract_text():
+            text += page.extract_text()
     return text
 
 
-def chunk_text(text, chunk_size=1000, overlap=200):
-    chunks = []
-    start = 0
-    chunk_id = 0
-
-    while start < len(text):
-        end = start + chunk_size
-        chunk = text[start:end]
-
-        chunks.append({
-            "id": chunk_id,
-            "text": chunk
-        })
-
-        chunk_id += 1
-        start += chunk_size - overlap
-
-    return chunks
+def chunk_text(text, size=800):
+    return [text[i:i+size] for i in range(0, len(text), size)]
 
 
-if __name__ == "__main__":
-    pdf_files = list(DATA_FOLDER.glob("*.pdf"))
+print("Starting ingestion...")
 
-    print(f"Found {len(pdf_files)} PDF files")
+for file in os.listdir(DATA_DIR):
 
-    total_embeddings = 0
+    if not file.endswith(".pdf"):
+        continue
 
-    for pdf in pdf_files:
-        text = read_pdf(pdf)
-        chunks = chunk_text(text)
+    path = os.path.join(DATA_DIR, file)
 
-        print(f"\nDocument: {pdf.name}")
-        print(f"Characters extracted: {len(text)}")
-        print(f"Chunks created: {len(chunks)}")
+    print(f"\nProcessing: {file}")
 
-        for i, chunk in enumerate(chunks):
-            embedding = get_embedding(chunk["text"])
+    text = read_pdf(path)
+    chunks = chunk_text(text)
 
-            collection.add(
-                embeddings=[embedding],
-                documents=[chunk["text"]],
-                metadatas=[{"source": pdf.name, "chunk_id": i, "type": "pdf"}],
-                ids=[f"{pdf.name}_{i}"]
-            )
+    print(f"Chunks: {len(chunks)}")
 
-            total_embeddings += 1
+    for i, chunk in enumerate(chunks):
 
-    print(f"\n---- Embeddings stored in ChromaDB: {total_embeddings}----")
+        embedding = get_embedding(chunk)
+
+        collection.add(
+            ids=[f"{file}_{i}"],
+            documents=[chunk],
+            embeddings=[embedding],
+            metadatas=[{"source": file}]
+        )
+
+print("\nDONE INGESTION ✔")
