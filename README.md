@@ -33,21 +33,22 @@ This project implements a **RAG pipeline**:
 
 ---
 ## 📁 Project Structure
+```text
 document-qa-bot/
-│
 ├── app.py
 ├── src/
-│ ├── query.py
-│ ├── ingest.py
-│ ├── embeddings.py
-│ ├── vector_store.py
-│
+│   ├── query.py
+│   ├── ingest.py
+│   ├── embeddings.py
+│   ├── vector_store.py
 ├── data/
 ├── db/
 ├── requirements.txt
 ├── .env
 └── README.md
----
+
+```
+
 
 ##  How It Works
 
@@ -73,7 +74,6 @@ document-qa-bot/
 ##  How to Run Locally
 
 1. Clone repo
-```bash
 git clone https://github.com/your-repo/document-qa-bot.git
 cd document-qa-bot
 
@@ -93,9 +93,7 @@ python src/ingest.py
 6. Run application
 streamlit run app.py
 
-----------
 ### Status
-----------
 
 ✔ RAG pipeline working  
 ✔ Document retrieval functional  
