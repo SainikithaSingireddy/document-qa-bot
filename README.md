@@ -5,7 +5,7 @@ A **Retrieval-Augmented Generation (RAG)** based AI system that allows users to 
 ---
 
 ##  Live Demo
-https://your-streamlit-url-here
+https://document-app-bot-4gav9uf8bbxb4idkj4mapm.streamlit.app/
 
 ---
 
@@ -74,7 +74,7 @@ document-qa-bot/
 ##  How to Run Locally
 
 1. Clone repo
-git clone https://github.com/your-repo/document-qa-bot.git
+git clone https://github.com/SainikithaSingireddy/document-qa-bot.git
 cd document-qa-bot
 
 2. Create virtual environment
