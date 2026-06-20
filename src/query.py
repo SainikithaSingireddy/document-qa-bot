@@ -1,77 +1,61 @@
 import os
-from dotenv import load_dotenv
 import google.generativeai as genai
+from dotenv import load_dotenv
 
 from src.embeddings import get_embedding
 from src.vector_store import collection
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
-def retrieve_chunks(question, k=3):
+def ask_question(question):
 
-    query_embedding = get_embedding(question)
+    try:
+       
+        query_embedding = get_embedding(question)
 
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=k,
-        include=["documents", "metadatas"]
-    )
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=3
+        )
 
-    return results["documents"][0], results["metadatas"][0]
+        docs = results.get("documents", [[]])[0]
 
+        if not docs:
+            return {
+                "answer": "Not found in documents.",
+                "sources": []
+            }
 
+        context = "\n\n".join(docs)
 
-def generate_answer(question, chunks, metadata):
-
-    context = "\n\n".join(
-        [f"{m['source']}:\n{c}" for c, m in zip(chunks, metadata)]
-    )
-
-    prompt = f"""
-You are a helpful assistant.
-
-Answer ONLY using the context below.
-If answer is not found, say "Not found in documents".
+        prompt = f"""
+You are a helpful assistant. Answer ONLY using the context below.
 
 Context:
 {context}
 
 Question:
 {question}
+
+Answer clearly and concisely.
 """
 
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
-        )
-        return response.text
+        # 4. Call Gemini model
+        model = genai.GenerativeModel("gemini-1.5-flash")
 
-    except Exception:
-        return (
-            "⚠ LLM temporarily unavailable due to API limits.\n\n"
-            "But retrieval is working.\n\n"
-            "Top relevant document chunk:\n\n"
-            f"{chunks[0] if chunks else 'No context found'}"
-        )
+        response = model.generate_content(prompt)
 
-
-def ask_question(question):
-
-    chunks, metadata = retrieve_chunks(question)
-
-    if not chunks:
         return {
-            "answer": "Not found in documents",
-            "sources": []
+            "answer": response.text,
+            "sources": results.get("metadatas", [[]])[0]
         }
 
-    answer = generate_answer(question, chunks, metadata)
-
-    return {
-        "answer": answer,
-        "sources": list(set([m["source"] for m in metadata]))
-    }
+    except Exception as e:
+        return {
+            "answer": f"Error: {str(e)}",
+            "sources": []
+        }
