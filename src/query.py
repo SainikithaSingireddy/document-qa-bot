@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 
 from src.embeddings import get_embedding
 from src.vector_store import collection
