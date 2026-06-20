@@ -35,7 +35,6 @@ This project implements a **RAG pipeline**:
 
 ## Project Structure
 
-
 document-qa-bot/
 │
 ├── app.py # Streamlit UI
