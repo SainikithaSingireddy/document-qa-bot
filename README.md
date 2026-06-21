@@ -1,101 +1,135 @@
-# RAG Document Q&A Bot
+# 📄 RAG Document Q&A Bot
 
-A **Retrieval-Augmented Generation (RAG)** based AI system that allows users to ask questions from uploaded documents (PDFs) and get accurate answers using semantic search + LLM.
+A Retrieval-Augmented Generation (RAG) application that allows users to ask questions about uploaded documents and receive context-aware answers generated using Google Gemini.
 
----
+## 🚀 Features
 
-##  Live Demo
-https://document-app-bot-4gav9uf8bbxb4idkj4mapm.streamlit.app/
-
----
-
-##  Project Overview
-
-This project implements a **RAG pipeline**:
-
-1. Load documents (PDFs)
-2. Extract and chunk text
-3. Convert text into embeddings
-4. Store embeddings in a vector database (ChromaDB)
-5. Retrieve relevant chunks using similarity search
-6. Generate answers using Google Gemini LLM
+- Document ingestion and processing
+- PDF document support
+- Text chunking
+- Vector embeddings using Gemini Embeddings
+- ChromaDB vector storage
+- Semantic document retrieval
+- AI-powered answers using Gemini
+- Source attribution for retrieved content
+- Streamlit web interface
 
 ---
 
-##  Tech Stack
+## 🛠️ Tech Stack
 
-- Python 
-- Streamlit (Frontend UI)
-- Google Gemini API (LLM + Embeddings)
-- ChromaDB (Vector Database)
-- PyPDF (PDF text extraction)
-- dotenv (Environment variables)
+- Python
+- Streamlit
+- Google Gemini API
+- ChromaDB
+- PyPDF
+- python-dotenv
 
 ---
-## 📁 Project Structure
+
+## 📂 Project Structure
+
 ```text
 document-qa-bot/
+│
 ├── app.py
-├── src/
-│   ├── query.py
-│   ├── ingest.py
-│   ├── embeddings.py
-│   ├── vector_store.py
 ├── data/
 ├── db/
+├── src/
+│   ├── __init__.py
+│   ├── embeddings.py
+│   ├── ingest.py
+│   ├── query.py
+│   ├── vector_store.py
+│
 ├── requirements.txt
-├── .env
-└── README.md
-
+├── README.md
+└── .env
 ```
-
-
-##  How It Works
-
-### 1. Document Ingestion
-- PDFs are read using PyPDF
-- Text is split into chunks
-
-### 2. Embedding Generation
-- Each chunk is converted into vector embeddings using:
-  - `models/gemini-embedding-2`
-
-### 3. Vector Storage
-- Embeddings stored in ChromaDB
-
-### 4. Query Flow
-- User question → embedding generated
-- Similar chunks retrieved from DB
-- Context passed to Gemini LLM
-- Final answer generated
 
 ---
 
-##  How to Run Locally
+## ⚙️ Setup
 
-1. Clone repo
-git clone https://github.com/SainikithaSingireddy/document-qa-bot.git
+### Clone Repository
+
+```bash
+git clone <repository-url>
 cd document-qa-bot
+```
 
-2. Create virtual environment
+### Create Virtual Environment
+
+```bash
 python -m venv venv
-venv\Scripts\activate   # Windows
+```
 
-3. Install dependencies
+### Activate Environment
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-4. Add API key in .env
-GOOGLE_API_KEY=your_api_key_here
+### Configure Environment Variables
 
-5. Run ingestion
-python src/ingest.py
+Create a `.env` file:
 
-6. Run application
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+---
+
+## 📥 Ingest Documents
+
+Place documents inside the `data` folder.
+
+Run:
+
+```bash
+python -m src.ingest
+```
+
+---
+
+## ▶️ Run Application
+
+```bash
 streamlit run app.py
+```
 
-### Status
+---
 
-✔ RAG pipeline working  
-✔ Document retrieval functional  
-✔ Streamlit UI working  
-✔ Project ready for demo
+## 💬 Example Questions
+
+- What is Artificial Intelligence?
+- Summarize the documents.
+- What topics are covered?
+- Explain climate change.
+
+---
+
+## 📌 How It Works
+
+1. Documents are loaded and processed.
+2. Text is split into chunks.
+3. Gemini Embeddings generate vector representations.
+4. ChromaDB stores document vectors.
+5. User questions are embedded.
+6. Relevant chunks are retrieved.
+7. Gemini generates answers using retrieved context.
+8. Sources are displayed to the user.
+
+---
+
+## 📜 License
+
+This project was developed as part of a technical assessment and learning project.
