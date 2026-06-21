@@ -7,55 +7,55 @@ from src.vector_store import collection
 
 load_dotenv()
 
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 
 def ask_question(question):
-
     try:
-       
         query_embedding = get_embedding(question)
-
         results = collection.query(
             query_embeddings=[query_embedding],
-            n_results=3
+            n_results=5
         )
 
-        docs = results.get("documents", [[]])[0]
+        documents = results.get("documents", [[]])[0]
+        metadatas = results.get("metadatas", [[]])[0]
 
-        if not docs:
+        if not documents:
             return {
-                "answer": "Not found in documents.",
+                "answer": "No relevant information was found in the uploaded documents.",
                 "sources": []
             }
-
-        context = "\n\n".join(docs)
+        
+        context = "\n\n".join(documents)
 
         prompt = f"""
-You are a helpful assistant. Answer ONLY using the context below.
+You are a helpful document assistant.
+
+Answer the question ONLY using the provided context.
+
+If the answer is not available in the context, respond exactly with:
+
+Not found in documents.
 
 Context:
 {context}
 
 Question:
 {question}
-
-Answer clearly and concisely.
 """
-
-        # 4. Call Gemini model
-        model = genai.GenerativeModel("gemini-1.5-flash")
 
         response = model.generate_content(prompt)
 
         return {
-            "answer": response.text,
-            "sources": results.get("metadatas", [[]])[0]
+            "answer": response.text.strip(),
+            "sources": metadatas
         }
 
-    except Exception as e:
+    except Exception:
         return {
-            "answer": f"Error: {str(e)}",
+            "answer": "⚠️ Unable to process your request at the moment. Please try again later.",
             "sources": []
         }

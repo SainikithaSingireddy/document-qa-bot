@@ -1,4 +1,4 @@
-from query import ask_question
+from src.query import ask_question
 
 def run_chatbot():
     print("\n🤖 RAG Document Q&A Bot Ready!\n")
