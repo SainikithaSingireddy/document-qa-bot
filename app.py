@@ -31,12 +31,12 @@ if question:
 
     st.divider()
 
-    st.subheader("💡 Answer")
+    st.subheader("Answer")
     st.write(result.get("answer", "No answer available."))
 
     st.divider()
 
-    st.subheader("📚 Sources")
+    st.subheader("Sources")
 
     sources = result.get("sources", [])
 
@@ -50,7 +50,7 @@ if question:
                 unique_sources.append(file_name)
 
         for file_name in unique_sources:
-            st.success(f"📄 {file_name}")
+            st.success(f"{file_name}")
 
     else:
         st.info("No sources found.")
